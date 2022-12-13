@@ -25,7 +25,7 @@ fun main(args: Array<String>) {
             if (!leftIsArray && !rightIsArray) {
               if (left < right) {
                 return -1;
-              }                                                                            
+              }                                                                            
               
               if (left === right) {
                 return 0;              
