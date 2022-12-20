@@ -121,18 +121,17 @@ object Day20B2 {
             queue.addAll(queueCopy)
         }
 
-        val loop: Long = (size) * (size - 1)
-
         while (queue.isNotEmpty()) {
             val el = queue.removeFirst()
-            el.move(el.v % loop)
+            el.move(el.v % (size - 1))
             println(queue.size)
         }
 
         val zero = root.findVal(0)
         var result = 0L
         for (i in listOf(1000, 2000, 3000)) {
-            val v = zero.withOffset(i.toLong() % loop).v
+            println(zero.pos)
+            val v = zero.withOffset(i.toLong()).v
             println("V=$v")
             result += v
         }

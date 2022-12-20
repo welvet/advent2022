@@ -68,6 +68,26 @@ func findVal(n *Node, v int64) *Node {
 	return n
 }
 
+func findPos(n *Node, p int) *Node {
+	for n.pos != p {
+		n = n.right
+	}
+
+	return n
+}
+
+func printVals(n *Node) {
+	print(n.value, ", ")
+	other := n.right
+
+	for other != n {
+		print(other.value, ", ")
+		other = other.right
+	}
+
+	println()
+}
+
 func withOffset(n *Node, offset int) *Node {
 	i := 0
 	for i < offset {
@@ -83,33 +103,39 @@ func main() {
 	nums := toNums(strs)
 
 	size := len(nums)
-	elements := make([]Node, size)
+	elements := make([]*Node, size)
 	var prev *Node
 
 	for i, v := range nums {
-		elements[i] = Node{v * 811589153, i, nil, nil}
+		elements[i] = &Node{v * 811589153, i, nil, nil}
 
 		if prev != nil {
-			prev.right = &elements[i]
-			(&elements[i]).left = prev
+			prev.right = elements[i]
+			(elements[i]).left = prev
 		}
-		prev = &elements[i]
+		prev = elements[i]
 	}
-	prev.right = &elements[0]
+	prev.right = elements[0]
 	elements[0].left = prev
 
-	queue := make([]*Node, size*10)
-	for i := 0; i < 10; i++ {
+	iter := 10
+
+	queue := make([]*Node, size*iter)
+	for i := 0; i < iter; i++ {
 		for j, v := range elements {
-			queue[j+(i*size)] = &v
+			queue[j+(i*size)] = v
 		}
 	}
 
-	loop := int64((size) * (size - 1))
+	loop := int64(size - 1)
 
+	//printVals(elements[0])
 	for i, v := range queue {
 		move(v, int(v.value%loop))
+		//printVals(findPos(v, 0))
+
 		println("Iteration", i, "of total", len(queue))
+
 	}
 
 	zero := findVal(queue[0], 0)

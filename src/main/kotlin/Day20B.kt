@@ -30,17 +30,34 @@ object Day20B {
                     c++
                 }
 
-                val otherNode = X[otherPos]
+                if (myPos == X.size - 1 && otherPos == 0) {
+                    var prev: Node = this
+                    for (i in 0 until X.size ) {
+                        val curr = X[i]
+                        X[i] = prev
+                        X[i].pos = i
 
-                if (otherPos == 0) {
+                        prev = curr
+                    }
+                    c++
+                } else if (myPos == 0 && otherPos == X.size - 1) {
+                    for (i in 1 until X.size ) {
+                        val curr = X[i]
+                        X[i - 1] = curr
+                        X[i - 1].pos = i - 1
+                    }
+                    X[X.size - 1] = this
+                    pos = X.size - 1
+                    c--
+                } else {
+                    val otherNode = X[otherPos]
 
+                    X[otherPos] = this
+                    this.pos = otherPos
+
+                    X[myPos] = otherNode
+                    otherNode.pos = myPos
                 }
-
-                pos = otherPos
-                X[otherPos] = this
-
-                otherNode.pos = myPos
-                X[myPos] = otherNode
             }
         }
 
@@ -51,7 +68,7 @@ object Day20B {
         fun findVal(t: Long): Node {
             var current = this
             while (current.v != t) {
-                current = X[rightPos()]
+                current = X[current.rightPos()]
             }
 
             return current
@@ -60,7 +77,7 @@ object Day20B {
         fun withOffset(offset: Long): Node {
             var current = this
             for (i in 0 until offset) {
-                current = X[rightPos()]
+                current = X[current.rightPos()]
             }
 
             return current
@@ -73,12 +90,13 @@ object Day20B {
     }
 
     fun run() {
-        val nums = "day20_test.txt"
+        val nums = "day20.txt"
             .readFile()
             .lines()
             .map { it.trim() }
             .filter { it.isNotBlank() }
-            .map { it.toLong() /** 811589153 */ }
+            .map { it.toLong() }
+            .map { it * 811589153  }
 
         val queue = LinkedList<Node>()
         val size = nums.size.toLong()
@@ -94,24 +112,25 @@ object Day20B {
         }
 
         val queueCopy = ArrayList(queue)
-//        repeat(9) {
-//            queue.addAll(queueCopy)
-//        }
+        repeat(9) {
+            queue.addAll(queueCopy)
+        }
 
-        val loop: Long = (size) * (size - 1)
+        val loop: Long = (size - 1)
         printList()
 
         while (queue.isNotEmpty()) {
             val el = queue.removeFirst()
             el.move((el.v % loop).toInt())
-            printList()
-//            println("Queue size = ${queue.size}")
+//            print("Move ${el.v}: ")
+//            printList()
+            println("Queue size = ${queue.size}")
         }
 
         val zero = root.findVal(0)
         var result = 0L
         for (i in listOf(1000, 2000, 3000)) {
-            val v = zero.withOffset(i.toLong() % loop).v
+            val v = zero.withOffset(i.toLong()).v
             println("V=$v")
             result += v
         }
