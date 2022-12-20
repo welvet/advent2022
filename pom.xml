@@ -52,7 +52,12 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <jvmTarget>1.8</jvmTarget>
+                    <jvmTarget>17</jvmTarget>
+                    <args>
+                        <arg>-Xno-call-assertions</arg>
+                        <arg>-Xno-receiver-assertions</arg>
+                        <arg>-Xno-param-assertions</arg>
+                    </args>
                 </configuration>
             </plugin>
             <plugin>
