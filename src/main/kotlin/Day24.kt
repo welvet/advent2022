@@ -86,7 +86,8 @@ object Day24 {
     data class Expedition(
         val p: Point,
         val roundTurn: Int,
-        val turn: Int
+        val turn: Int,
+        var prev: Expedition? = null
     ) {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
